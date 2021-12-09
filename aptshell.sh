@@ -14,29 +14,53 @@ echo "aptパッケージの更新を始めます。"
 
 startTime=$SECONDS
 prompt=$USER@`basename $PWD`
+execTime=`date "+%Y%m%d_%H%M"`
 
 printf "\n"
 echo "$prompt $ sudo apt-get update" 
-sudo apt-get update > ./log/update/update`date "+%Y%m%d_%H%M"`.log
-printf "+---------------------+\n"
-printf "|\e[32m Successfully Update\e[m |\n"
-printf "+---------------------+\n"
+sudo apt-get update > ./log/update/update$execTime.log
+
+if [[ "$?" -eq 0 ]]
+then
+	printf "+----------------+\n"
+	printf "|\e[32m Success Update\e[m |\n"
+	printf "+----------------+\n"
+else
+	printf "+----------------+\n"
+	printf "|\e[31m Failure Update\e[m |\n"
+	printf "+----------------+\n"
+fi
 
 printf "\n"
 echo "$prompt $ sudo apt-get -y upgrade"
-sudo apt-get -y upgrade > ./log/upgrade/upgrade`date "+%Y%m%d_%H%M"`.log
-printf "+----------------------+\n"
-printf "|\e[32m Successfully Upgrade\e[m |\n"
-printf "+----------------------+\n"
+sudo apt-get -y upgrade > ./log/upgrade/upgrade$execTime.log
+tail -n 1 ./log/upgrade/upgrade$execTime.log
+if [[ "$?" -eq 0 ]]
+then
+	printf "+-----------------+\n"
+	printf "|\e[32m Success Upgrade\e[m |\n"
+	printf "+-----------------+\n"
+else
+	printf "+-----------------+\n"
+	printf "|\e[31m Failure Upgrade\e[m |\n"
+	printf "+-----------------+\n"
+fi
 
 printf "\n"
 echo "$prompt $ sudo apt-get -y autoremove"
-sudo apt-get -y autoremove > ./log/autoremove/autoremove`date "+%Y%m%d_%H%M"`.log
-printf "+-------------------------+\n"
-printf "|\e[32m Successfully autoremove\e[m |\n"
-printf "+-------------------------+\n"
+sudo apt-get -y autoremove > ./log/autoremove/autoremove$execTime.log
+tail -n 1 ./log/autoremove/autoremove$execTime.log
+if [[ "$?" -eq 0 ]]
+then
+	printf "+--------------------+\n"
+	printf "|\e[32m Success Autoremove\e[m |\n"
+	printf "+--------------------+\n"
+else
+	printf "+--------------------+\n"
+	printf "|\e[31m Failure Autoremove\e[m |\n"
+	printf "+--------------------+\n"
+fi
 
 printf "\n"
 echo "今回のパッケージ更新は$(($SECONDS-$startTime))秒かかりました。"
-
 
